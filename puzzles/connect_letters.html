@@ -248,7 +248,7 @@
           if(l.dataset.letter==active.letter)
             continue;
           const r = l.getBoundingClientRect();
-          if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
+          if (x+s.left >= r.left && x+s.left <= r.right && y+s.top >= r.top && y+s.top <= r.bottom) {
             onUp(ev);
             return;
           }
