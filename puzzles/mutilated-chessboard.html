@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .board{
-        width: calc(min(75vw,400px));
-        height: calc(min(75vw,400px));
+        width: calc(min(70vw,400px));
+        height: calc(min(70vw,400px));
         display: grid;
         grid-template-columns: auto auto auto auto auto auto auto auto;
-        position: relative;
-        top: 5%;
-        left: 5%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
         user-select:none;
     }
 
@@ -43,13 +44,32 @@
     }
 
     .vertical {
-        width: calc(min(75vw,400px)/8 - 5px);
-        height: calc(min(75vw,400px)/4 - 5px);
+        width: calc(min(70vw,400px)/8 - 5px);
+        height: calc(min(70vw,400px)/4 - 5px);
+        left: 85%;
+        top: 30%;
     }
 
     .horizontal {
-        width: calc(min(75vw,400px)/4 - 5px);
-        height: calc(min(75vw,400px)/8 - 5px);
+        width: calc(min(70vw,400px)/4 - 5px);
+        height: calc(min(70vw,400px)/8 - 5px);
+        left: 85%;
+        top: 70%;
+    }
+
+    @media (max-width: 768px) {
+      .board {
+        top: 5%;
+        transform: translate(-50%,0);
+      }
+      .vertical {
+        left: 30%;
+        top: 90%;
+      }
+      .horizontal {
+        left: 70%;
+        top: 90%;
+      }
     }
   </style>
 </head>
@@ -61,8 +81,8 @@
     <div class="play">
       <div id="playArea" class="play-area" aria-label="puzzle area">
         <div class="board" id="board"></div>
-        <div class="vertical domino" data-orient="vertical" style="left: 70%; top: 30%"></div>
-        <div class="horizontal domino" data-orient="horizontal" style="left: 70%; top: 60%"></div>
+        <div class="vertical domino" data-orient="vertical"></div>
+        <div class="horizontal domino" data-orient="horizontal"></div>
       </div>
       
       <script>
@@ -77,6 +97,14 @@
                   }
                   document.getElementById('board').appendChild(square);
               }
+          }
+
+          const area = document.getElementById("playArea").getBoundingClientRect();
+          const selections = Array.from(document.querySelectorAll('.domino'));
+          for(const el of selections) {
+            const box = el.getBoundingClientRect();
+            el.style.left = box.left-area.left-box.width/2 + 'px';
+            el.style.top = box.top-area.top-box.height/2 + 'px';
           }
       </script>
 
@@ -155,8 +183,8 @@
             } else {
               active.domino.style.borderColor = 'black';
             }
-            active.domino.style.left = col*b.width/8 + b.left - playRect.left-5 + 'px';
-            active.domino.style.top = row*b.height/8 + b.top - playRect.top-5 + 'px';
+            active.domino.style.left = col*b.width/8 + b.left - playRect.left-6 + 'px';
+            active.domino.style.top = row*b.height/8 + b.top - playRect.top-6 + 'px';
             active.posr = row; active.posc = col;
           }
         } else {
