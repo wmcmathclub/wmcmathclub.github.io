@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mutilated Chessboard | WMC Math Club</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .board{
+        width: calc(min(75vw,400px));
+        height: calc(min(75vw,400px));
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+        position: relative;
+        top: 5%;
+        left: 5%;
+        user-select:none;
+    }
+
+    .square{
+        border:1px solid #111;
+        display:flex;
+        z-index:1
+    }
+
+    .light{
+        background: #0077ff;
+    }
+    .dark{
+        background: #333333;
+    }
+    .non-existant{
+        visibility: hidden;
+    }
+
+    .domino {
+        background: #0cb600;
+        border:3px solid #111;
+        display: flex;
+        z-index: 2;
+        position: absolute;
+        user-select:none;
+    }
+
+    .vertical {
+        width: calc(min(75vw,400px)/8 - 5px);
+        height: calc(min(75vw,400px)/4 - 5px);
+    }
+
+    .horizontal {
+        width: calc(min(75vw,400px)/4 - 5px);
+        height: calc(min(75vw,400px)/8 - 5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="card" style="position: absolute; top: 0">
+    <h1>Cover the chessboard with dominoes.</h1>
+    <p class="lead">Add 31 dominoes to the mutilated chessboard, completely covering it.</p>
+
+    <div class="card">
+      <div class="play">
+        <div id="playArea" class="play-area" aria-label="puzzle area">
+          <div class="board" id="board"></div>
+          <div class="vertical domino" data-orient="vertical" style="left: 70%; top: 30%"></div>
+          <div class="horizontal domino" data-orient="horizontal" style="left: 70%; top: 60%"></div>
+        </div>
+        <script>
+            for(let i = 0; i<8; ++i) {
+                for(let j = 0; j<8; ++j) {
+                    const square = document.createElement('div');
+                    square.className = 'square';
+                    if((i===0 && j===0) || (i===7 && j===7)) {
+                        square.classList.add('non-existant');
+                    } else {
+                        square.classList.add((i+j)%2 ? 'light':'dark');
+                    }
+                    document.getElementById('board').appendChild(square);
+                }
+            }
+        </script>
+
+        <div class="controls">
+          <button id="undo">Undo</button>
+          <button id="clear">Clear</button>
+          <button id="check" style="background: #118b2f">Check</button>
+        </div>
+        <div class="status" id="status">Place dominoes on the chessboard.</div>
+      </div>
+
+      <div class="footbar">
+        <div style="background:#ededed;padding:12px;border-radius:8px">
+          <h3>More puzzles & resources</h3>
+          <p>Click below for more problems like this and math resources (Google Classroom).</p>
+          <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
+          <button id="copyLink" style="margin-top:8px">Copy link</button>
+          <small>Tip: draw smooth curves — paths can be any shape.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <h2>Bravo!</h2>
+      <p><b>That wasn't too easy.</b> In fact, this problem uses a branch of math called <b>Topology</b>. Want to learn more? Join math club/circle!</p>
+      <p><a id="modalLink" href="#" target="_blank">Open the math club / resources</a></p>
+      <p style="margin-top:12px"><button id="closeModal">Close</button></p>
+    </div>
+  </div>
+
+  <script>
+
+    // DOM
+    const board = document.getElementById("board");
+    const dominoes = Array.from(document.querySelectorAll('.domino'));
+    const playArea = document.getElementById('playArea');
+
+    let active = null; // {domino, orientation, relative X, relative Y, on board}
+
+    function startDrawFromElement(domino, clientX, clientY){
+      const orientation = domino.dataset.orient;
+      const d = domino.getBoundingClientRect();
+      const x = clientX-d.left; const y = clientY-d.top;
+      const newDomino = domino.cloneNode(true);
+      active = {domino: newDomino, orientation: orientation, rx: x, ry: y, onBoard: false};
+
+      document.getElementById("playArea").appendChild(newDomino);
+
+      function onMove(ev){
+        const clientX = ev.clientX !== undefined ? ev.clientX : (ev.touches && ev.touches[0].clientX);
+        const clientY = ev.clientY !== undefined ? ev.clientY : (ev.touches && ev.touches[0].clientY);
+        const left = clientX-active.rx; const top = clientY-active.ry;
+
+        const b = board.getBoundingClientRect();
+        const playRect = playArea.getBoundingClientRect();
+        if(left >= b.left-b.width/16 && left <= b.right && top >= b.top-b.height/16 && top <= b.bottom) {
+          let col = Math.min(7,Math.floor((left+b.width/16-b.left)/b.width*8));
+          let row = Math.min(7,Math.floor((top+b.height/16-b.top)/b.height*8));
+
+          if((row==0 && col==0) || (row==7 && col==7) || (active.orientation=='vertical' && row==7) || (active.orientation=='horizontal' && col==7)) {
+            active.domino.style.left = left - playRect.left + 'px';
+            active.domino.style.top = top - playRect.top + 'px';
+            active.onBoard = false;
+          } else {
+            active.domino.style.left = col*b.width/8 + b.left - playRect.left-5 + 'px';
+            active.domino.style.top = row*b.height/8 + b.top - playRect.top-5 + 'px';
+            active.onBoard = true;
+          }
+        } else {
+          active.domino.style.left = left - playRect.left + 'px';
+          active.domino.style.top = top - playRect.top + 'px';
+          active.onBoard = false;
+        }
+      }
+
+      function onUp(ev){
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onUp);
+        const clientX = ev.clientX !== undefined ? ev.clientX : (ev.changedTouches && ev.changedTouches[0].clientX);
+        const clientY = ev.clientY !== undefined ? ev.clientY : (ev.changedTouches && ev.changedTouches[0].clientY);
+        if(!active.onBoard) {
+          document.getElementById('playArea').removeChild(active.domino);
+        }
+        active = null;
+      }
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+      document.addEventListener('touchmove', onMove, {passive:false});
+      document.addEventListener('touchend', onUp);
+    }
+
+    dominoes.forEach(dm=>{
+      dm.addEventListener('mousedown', e=>{startDrawFromElement(dm, e.clientX, e.clientY)}); //idk why the way from the other page doesn't work here
+      dm.addEventListener('touchstart', e=>{
+        e.preventDefault(); const t = e.touches[0];
+        startDrawFromElement(dm, t.clientX, t.clientY);
+      });
+    });
+
+    // controls
+    document.getElementById('clear').addEventListener('click', ()=>{ paths.A = paths.B = paths.C = null; redrawAll(); status.textContent='Cleared.'; });
+    document.getElementById('undo').addEventListener('click', ()=>{ if(paths.C){ paths.C = null; status.textContent='Removed C path.'; redrawAll(); return; } if(paths.B){ paths.B = null; status.textContent='Removed B path.'; redrawAll(); return; } if(paths.A){ paths.A = null; status.textContent='Removed A path.'; redrawAll(); return; } status.textContent='Nothing to undo.'; });
+
+    document.getElementById('check').addEventListener('click', ()=>{
+      if(!paths.A || !paths.B || !paths.C){ status.textContent='Please draw a path for A, B and C.'; return; }
+      const intr = pathsIntersect();
+      if(intr.intersect){ status.textContent = `Paths intersected between ${intr.pair[0]} and ${intr.pair[1]}. Try again.`; return; }
+      status.textContent = 'No intersections detected — well done!';
+      modal.classList.add('open');
+    });
+
+    document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('open'); });
+
+    // accessibility: Enter to check
+    document.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('check').click(); });
+  </script>
+</body>
+</html>

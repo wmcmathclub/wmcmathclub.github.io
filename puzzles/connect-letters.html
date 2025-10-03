@@ -3,18 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Connect the Matching Letters — Edge Fix (Clipboard-safe)</title>
+  <title>Connect the Matching Letters | WMC Math Club</title>
   <link rel="stylesheet" href="style.css">
   <style>
-
-    .play-area{
-        background:var(--rect);
-        border:5px solid #111;
-        border-radius:6px;
-        height:440px;
-        position:relative;
-        overflow:hidden
-    }
 
     /* ensure letters are visible above the SVG in all browsers (Edge stacking quirk) */
     svg{
@@ -35,7 +26,6 @@
         justify-content:center;
         position:absolute;
         font-weight:800;
-        border-radius:4px;
         user-select:none;
         cursor:pointer;
         z-index:2
@@ -64,9 +54,9 @@
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Can you solve this?</h1>
-    <p class="lead">Connect matching letters without intersecting the paths. Click a letter to start, drag freely to draw any shape, and release on the matching letter (A → A, B → B, C → C).</p>
+  <div class="card" style="position: absolute; top: 0">
+    <h1>Connect matching letters without intersecting the paths.</h1>
+    <p class="lead">Click a letter to start, drag freely to draw any shape, and release on the matching letter (A → A, B → B, C → C).</p>
 
     <div class="card">
       <div class="play">
@@ -93,7 +83,7 @@
 
           <button id="undo">Undo</button>
           <button id="clear">Clear</button>
-          <button id="check">Check</button>
+          <button id="check" style="background: #118b2f">Check</button>
         </div>
         <div class="status" id="status">Draw three paths connecting each pair.</div>
       </div>
@@ -119,6 +109,7 @@
     </div>
   </div>
 
+  <script src="script.js"></script>
   <script>
     // --- CONFIG ---
     const CLASSROOM_URL = 'https://classroom.google.com/u/1/c/MzIwMTQ2MTIwOTIw';
@@ -131,66 +122,6 @@
     const moreLink = document.getElementById('moreLink');
     const modal = document.getElementById('modal');
     const modalLink = document.getElementById('modalLink');
-
-    // robust clipboard-copy helper with fallbacks
-    function fallbackCopyTextToClipboard(text) {
-      try {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        // Avoid scrolling to bottom
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        const successful = document.execCommand('copy');
-        document.body.removeChild(textArea);
-        return successful;
-      } catch (err) {
-        return false;
-      }
-    }
-
-    function copyTextToClipboard(text) {
-      return new Promise((resolve, reject) => {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(() => resolve(true)).catch(() => {
-            // fallback to execCommand
-            const ok = fallbackCopyTextToClipboard(text);
-            if (ok) resolve(true);
-            else reject(new Error('Copy failed'));
-          });
-        } else {
-          const ok = fallbackCopyTextToClipboard(text);
-          if (ok) resolve(true);
-          else reject(new Error('Copy not supported'));
-        }
-      });
-    }
-
-    // open link safely; fallback to copy + prompt when popups are blocked
-    function safeOpen(url){
-      let opened = false;
-      try{ const w = window.open(url, '_blank', 'noopener'); if(w) opened = true; } catch(e){ opened = false; }
-      if(opened) return;
-      // popup blocked — try to copy then prompt
-      copyTextToClipboard(url).then(()=>{
-        alert('Popup blocked — link copied to clipboard. Paste it into your browser address bar to open.');
-      }).catch(()=>{
-        // last resort: show prompt with the URL so the user can copy it manually
-        prompt('Popup blocked. Copy this link and open it manually:', url);
-      });
-    }
-
-    moreLink.addEventListener('click', e=>{ e.preventDefault(); safeOpen(CLASSROOM_URL); });
-    modalLink && modalLink.addEventListener('click', e=>{ e.preventDefault(); safeOpen(CLASSROOM_URL); });
-    document.getElementById('copyLink').addEventListener('click', ()=>{
-      copyTextToClipboard(CLASSROOM_URL).then(()=>{
-        alert('Link copied to clipboard');
-      }).catch(()=>{
-        prompt('Automatic copy failed. Please copy the link manually:', CLASSROOM_URL);
-      });
-    });
 
     // store one polyline per letter (array of points) or null
     const paths = {A:null, B:null, C:null};
