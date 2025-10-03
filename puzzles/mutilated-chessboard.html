@@ -58,44 +58,43 @@
     <h1>Cover the chessboard with dominoes.</h1>
     <p class="lead">Add 31 dominoes to the mutilated chessboard, completely covering it.</p>
 
-    <div class="card">
-      <div class="play">
-        <div id="playArea" class="play-area" aria-label="puzzle area">
-          <div class="board" id="board"></div>
-          <div class="vertical domino" data-orient="vertical" style="left: 70%; top: 30%"></div>
-          <div class="horizontal domino" data-orient="horizontal" style="left: 70%; top: 60%"></div>
-        </div>
-        <script>
-            for(let i = 0; i<8; ++i) {
-                for(let j = 0; j<8; ++j) {
-                    const square = document.createElement('div');
-                    square.className = 'square';
-                    if((i===0 && j===0) || (i===7 && j===7)) {
-                        square.classList.add('non-existant');
-                    } else {
-                        square.classList.add((i+j)%2 ? 'light':'dark');
-                    }
-                    document.getElementById('board').appendChild(square);
-                }
-            }
-        </script>
-
-        <div class="controls">
-          <button id="undo">Undo</button>
-          <button id="clear">Clear</button>
-          <button id="check" style="background: #118b2f">Check</button>
-        </div>
-        <div class="status" id="status">Place dominoes on the chessboard.</div>
+    <div class="play">
+      <div id="playArea" class="play-area" aria-label="puzzle area">
+        <div class="board" id="board"></div>
+        <div class="vertical domino" data-orient="vertical" style="left: 70%; top: 30%"></div>
+        <div class="horizontal domino" data-orient="horizontal" style="left: 70%; top: 60%"></div>
       </div>
+      
+      <script>
+          for(let i = 0; i<8; ++i) {
+              for(let j = 0; j<8; ++j) {
+                  const square = document.createElement('div');
+                  square.className = 'square';
+                  if((i===0 && j===0) || (i===7 && j===7)) {
+                      square.classList.add('non-existant');
+                  } else {
+                      square.classList.add((i+j)%2 ? 'light':'dark');
+                  }
+                  document.getElementById('board').appendChild(square);
+              }
+          }
+      </script>
 
-      <div class="footbar">
-        <div style="background:#ededed;padding:12px;border-radius:8px">
-          <h3>More puzzles & resources</h3>
-          <p>Click below for more problems like this and math resources (Google Classroom).</p>
-          <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
-          <button id="copyLink" style="margin-top:8px">Copy link</button>
-          <small>Tip: draw smooth curves — paths can be any shape.</small>
-        </div>
+      <div class="controls">
+        <button id="undo">Undo</button>
+        <button id="clear">Clear</button>
+        <button id="check" style="background: #118b2f">Check</button>
+      </div>
+      <div class="status" id="status">Place dominoes on the chessboard.</div>
+    </div>
+
+    <div class="footbar">
+      <div style="background:#ededed;padding:12px;border-radius:8px">
+        <h3>More puzzles & resources</h3>
+        <p>Click below for more problems like this and math resources (Google Classroom).</p>
+        <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
+        <button id="copyLink" style="margin-top:8px">Copy link</button>
+        <small>Tip: draw smooth curves — paths can be any shape.</small>
       </div>
     </div>
   </div>
@@ -115,15 +114,18 @@
     const board = document.getElementById("board");
     const dominoes = Array.from(document.querySelectorAll('.domino'));
     const playArea = document.getElementById('playArea');
+    const status = document.getElementById('status');
 
-    let active = null; // {domino, orientation, relative X, relative Y, on board}
+    let active = null; // {domino, orientation, relative X, relative Y, pos}
+    let covered = Array(8).fill().map(()=>Array(8).fill(false));
+    let added = [];
 
     function startDrawFromElement(domino, clientX, clientY){
       const orientation = domino.dataset.orient;
       const d = domino.getBoundingClientRect();
       const x = clientX-d.left; const y = clientY-d.top;
       const newDomino = domino.cloneNode(true);
-      active = {domino: newDomino, orientation: orientation, rx: x, ry: y, onBoard: false};
+      active = {domino: newDomino, orientation: orientation, rx: x, ry: y, posr: -1, posc: -1};
 
       document.getElementById("playArea").appendChild(newDomino);
 
@@ -134,23 +136,34 @@
 
         const b = board.getBoundingClientRect();
         const playRect = playArea.getBoundingClientRect();
+
+        // if statements are kinda redundant but idc
         if(left >= b.left-b.width/16 && left <= b.right && top >= b.top-b.height/16 && top <= b.bottom) {
           let col = Math.min(7,Math.floor((left+b.width/16-b.left)/b.width*8));
           let row = Math.min(7,Math.floor((top+b.height/16-b.top)/b.height*8));
+          const dcol = (active.orientation == 'horizontal');
+          const drow = (active.orientation == 'vertical');
 
-          if((row==0 && col==0) || (row==7 && col==7) || (active.orientation=='vertical' && row==7) || (active.orientation=='horizontal' && col==7)) {
+          if(row==0 && col==0 || row==7 && col==7 || row+drow>7 || col+dcol>7 || row+drow==7 && col+dcol==7) {
             active.domino.style.left = left - playRect.left + 'px';
             active.domino.style.top = top - playRect.top + 'px';
-            active.onBoard = false;
+            active.posr = -1; active.posc = -1;
+            active.domino.style.borderColor = 'black';
           } else {
+            if(covered[row][col] || covered[row+drow][col+dcol]) {
+              active.domino.style.borderColor = 'red';
+            } else {
+              active.domino.style.borderColor = 'black';
+            }
             active.domino.style.left = col*b.width/8 + b.left - playRect.left-5 + 'px';
             active.domino.style.top = row*b.height/8 + b.top - playRect.top-5 + 'px';
-            active.onBoard = true;
+            active.posr = row; active.posc = col;
           }
         } else {
           active.domino.style.left = left - playRect.left + 'px';
           active.domino.style.top = top - playRect.top + 'px';
-          active.onBoard = false;
+          active.posr = -1; active.posc = -1;
+          active.domino.style.borderColor = 'black';
         }
       }
 
@@ -161,8 +174,18 @@
         document.removeEventListener('touchend', onUp);
         const clientX = ev.clientX !== undefined ? ev.clientX : (ev.changedTouches && ev.changedTouches[0].clientX);
         const clientY = ev.clientY !== undefined ? ev.clientY : (ev.changedTouches && ev.changedTouches[0].clientY);
-        if(!active.onBoard) {
+
+        const drow = (active.orientation=='vertical');
+        const dcol = (active.orientation=='horizontal');
+
+        if(active.posr<0) {
           document.getElementById('playArea').removeChild(active.domino);
+        } else if(covered[active.posr][active.posc] || covered[active.posr+drow][active.posc+dcol]) {
+          document.getElementById('playArea').removeChild(active.domino);
+        } else {
+          covered[active.posr][active.posc] = true;
+          covered[active.posr+drow][active.posc+dcol] = true;
+          added.push(active);
         }
         active = null;
       }
@@ -182,15 +205,23 @@
     });
 
     // controls
-    document.getElementById('clear').addEventListener('click', ()=>{ paths.A = paths.B = paths.C = null; redrawAll(); status.textContent='Cleared.'; });
-    document.getElementById('undo').addEventListener('click', ()=>{ if(paths.C){ paths.C = null; status.textContent='Removed C path.'; redrawAll(); return; } if(paths.B){ paths.B = null; status.textContent='Removed B path.'; redrawAll(); return; } if(paths.A){ paths.A = null; status.textContent='Removed A path.'; redrawAll(); return; } status.textContent='Nothing to undo.'; });
+    document.getElementById('clear').addEventListener('click', ()=>{
+      for(const a of added) {
+        playArea.removeChild(a.domino);
+      }
+      added = [];
+      covered = Array(8).fill().map(()=>Array(8).fill(false));
+    });
+    document.getElementById('undo').addEventListener('click', ()=>{
+      const last = added[added.length-1];
+      playArea.removeChild(last.domino);
+      covered[last.posr][last.posc] = false;
+      covered[last.posr+(last.orientation=='vertical')][last.posc+(last.orientation=='horizontal')] = false;
+      added.pop();
+    });
 
     document.getElementById('check').addEventListener('click', ()=>{
-      if(!paths.A || !paths.B || !paths.C){ status.textContent='Please draw a path for A, B and C.'; return; }
-      const intr = pathsIntersect();
-      if(intr.intersect){ status.textContent = `Paths intersected between ${intr.pair[0]} and ${intr.pair[1]}. Try again.`; return; }
-      status.textContent = 'No intersections detected — well done!';
-      modal.classList.add('open');
+      status.textContent = `You are missing ${31-added.length} domino${added.length==30?'':'es'}.`;
     });
 
     document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('open'); });

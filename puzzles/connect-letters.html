@@ -58,44 +58,41 @@
     <h1>Connect matching letters without intersecting the paths.</h1>
     <p class="lead">Click a letter to start, drag freely to draw any shape, and release on the matching letter (A → A, B → B, C → C).</p>
 
-    <div class="card">
-      <div class="play">
-        <div id="playArea" class="play-area" aria-label="puzzle area">
-          <svg id="svg" width="100%" height="100%"></svg>
-
-          <!-- TWO of each letter (explicit) -->
-          <div class="letter" data-letter="A" id="A1" style="left:12%;top:10%" title="A1">A</div>
-          <div class="letter" data-letter="A" id="A2" style="right:12%;top:90%" title="A2">A</div>
-          
-          <div class="letter" data-letter="B" id="B1" style="left:45%;top:0%" title="B1">B</div>
-          <div class="letter" data-letter="B" id="B2" style="left:45%;top:90%" title="B2">B</div>
-          
-          <div class="letter" data-letter="C" id="C1" style="right:12%;top:10%" title="C1">C</div>
-          <div class="letter" data-letter="C" id="C2" style="left:12%;top:90%" title="C2">C</div>
-        </div>
-
-        <div class="controls">
-          <div class="palette">
-            <span class="swatch" style="background:#d62728"></span><strong>A</strong>
-            <span class="swatch" style="background:#2ca02c;margin-left:12px"></span><strong>B</strong>
-            <span class="swatch" style="background:#1f77b4;margin-left:12px"></span><strong>C</strong>
-          </div>
-
-          <button id="undo">Undo</button>
-          <button id="clear">Clear</button>
-          <button id="check" style="background: #118b2f">Check</button>
-        </div>
-        <div class="status" id="status">Draw three paths connecting each pair.</div>
+    <div class="play">
+      <div id="playArea" class="play-area" aria-label="puzzle area">
+        <svg id="svg" width="100%" height="100%"></svg>
+        <!-- TWO of each letter (explicit) -->
+        <div class="letter" data-letter="A" id="A1" style="left:12%;top:10%" title="A1">A</div>
+        <div class="letter" data-letter="A" id="A2" style="right:12%;top:90%" title="A2">A</div>
+        
+        <div class="letter" data-letter="B" id="B1" style="left:45%;top:0%" title="B1">B</div>
+        <div class="letter" data-letter="B" id="B2" style="left:45%;top:90%" title="B2">B</div>
+        
+        <div class="letter" data-letter="C" id="C1" style="right:12%;top:10%" title="C1">C</div>
+        <div class="letter" data-letter="C" id="C2" style="left:12%;top:90%" title="C2">C</div>
       </div>
 
-      <div class="footbar">
-        <div style="background:#ededed;padding:12px;border-radius:8px">
-          <h3>More puzzles & resources</h3>
-          <p>Click below for more problems like this and math resources (Google Classroom).</p>
-          <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
-          <button id="copyLink" style="margin-top:8px">Copy link</button>
-          <small>Tip: draw smooth curves — paths can be any shape.</small>
+      <div class="controls">
+        <div class="palette">
+          <span class="swatch" style="background:#d62728"></span><strong>A</strong>
+          <span class="swatch" style="background:#2ca02c;margin-left:12px"></span><strong>B</strong>
+          <span class="swatch" style="background:#1f77b4;margin-left:12px"></span><strong>C</strong>
         </div>
+
+        <button id="undo">Undo</button>
+        <button id="clear">Clear</button>
+        <button id="check" style="background: #118b2f">Check</button>
+      </div>
+      <div class="status" id="status">Draw three paths connecting each pair.</div>
+    </div>
+
+    <div class="footbar">
+      <div style="background:#ededed;padding:12px;border-radius:8px">
+        <h3>More puzzles & resources</h3>
+        <p>Click below for more problems like this and math resources (Google Classroom).</p>
+        <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
+        <button id="copyLink" style="margin-top:8px">Copy link</button>
+        <small>Tip: draw smooth curves — paths can be any shape.</small>
       </div>
     </div>
   </div>
@@ -112,7 +109,6 @@
   <script src="script.js"></script>
   <script>
     // --- CONFIG ---
-    const CLASSROOM_URL = 'https://classroom.google.com/u/1/c/MzIwMTQ2MTIwOTIw';
     const colors = {A:'#d62728', B:'#2ca02c', C:'#1f77b4'};
 
     // DOM
@@ -248,8 +244,32 @@
     }
 
     // controls
-    document.getElementById('clear').addEventListener('click', ()=>{ paths.A = paths.B = paths.C = null; redrawAll(); status.textContent='Cleared.'; });
-    document.getElementById('undo').addEventListener('click', ()=>{ if(paths.C){ paths.C = null; status.textContent='Removed C path.'; redrawAll(); return; } if(paths.B){ paths.B = null; status.textContent='Removed B path.'; redrawAll(); return; } if(paths.A){ paths.A = null; status.textContent='Removed A path.'; redrawAll(); return; } status.textContent='Nothing to undo.'; });
+    document.getElementById('clear').addEventListener('click', ()=>{
+      paths.A = paths.B = paths.C = null;
+      redrawAll();
+      status.textContent='Cleared.'; 
+    });
+    document.getElementById('undo').addEventListener('click', ()=>{
+      if(paths.C){
+        paths.C = null;
+        status.textContent='Removed C path.';
+        redrawAll();
+        return;
+      }
+      if(paths.B){
+        paths.B = null;
+        status.textContent='Removed B path.';
+        redrawAll()
+        return;
+      }
+      if(paths.A){
+        paths.A = null;
+        status.textContent='Removed A path.';
+        redrawAll();
+        return;
+      }
+      status.textContent='Nothing to undo.';
+    });
 
     document.getElementById('check').addEventListener('click', ()=>{
       if(!paths.A || !paths.B || !paths.C){ status.textContent='Please draw a path for A, B and C.'; return; }
