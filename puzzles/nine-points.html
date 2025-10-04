@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nine Points | WMC Math Club</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grid{
+        width: calc(min(60vw,300px));
+        height: calc(min(60vw,300px));
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        user-select:none;
+    }
+
+    .dot {
+        display: flex;
+        margin: auto;
+        height: 10px;
+        width: 10px;
+        background-color: black;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        transform: translate(-50%,-50%); /* for the ocd folks */
+    }
+  </style>
+</head>
+<body>
+  <div class="card" style="position: absolute; top: 0">
+    <h1>Connect the 9 points with a path of 4 lines.</h1>
+    <p class="lead">Click to place the start of the path, then click for each subsequent point.</p>
+
+    <div class="play">
+      <div id="playArea" class="play-area" aria-label="puzzle area">
+        <svg id="svg" width="100%" height="100%"></svg>
+        <div id="grid" class="grid"></div>
+      </div>
+      
+      <script>
+          for(let i = 0; i<9; ++i) {
+                  const dot = document.createElement('div');
+                  dot.className = 'dot';
+                  document.getElementById('grid').appendChild(dot);
+          }
+      </script>
+
+      <div class="controls">
+        <button id="undo">Undo</button>
+        <button id="clear">Clear</button>
+        <button id="check" style="background: #118b2f">Check</button>
+      </div>
+      <div class="status" id="status">Create a path.</div>
+    </div>
+
+    <div class="footbar">
+      <div style="background:#ededed;padding:12px;border-radius:8px">
+        <h3>More puzzles & resources</h3>
+        <p>Click below for more problems like this and math resources (Google Classroom).</p>
+        <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
+        <button id="copyLink" style="margin-top:8px">Copy link</button>
+        <small>Tip: draw smooth curves — paths can be any shape.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <h2>Nice creativity!</h2>
+      <p>This problem is an example of the type of problem-solving done in math club. Want to learn more? Join math club/circle!</p>
+      <p><a id="modalLink" href="#" target="_blank">Open the math club / resources</a></p>
+      <p style="margin-top:12px"><button id="closeModal">Close</button></p>
+    </div>
+  </div>
+
+  <script>
+
+    // DOM
+    const grid = document.getElementById("grid");
+    const gridRect = grid.getBoundingClientRect();
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const playArea = document.getElementById('playArea');
+    const area = playArea.getBoundingClientRect();
+    const status = document.getElementById('status');
+
+    let pts = [];
+    let covers = [];
+
+    // https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+    function sqr(x) { return x * x }
+    function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
+    function distToSegmentSquared(p, v, w) {
+      var l2 = dist2(v, w);
+      if (l2 == 0) return dist2(p, v);
+      var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+      t = Math.max(0, Math.min(1, t));
+      return dist2(p, { x: v.x + t * (w.x - v.x),
+                        y: v.y + t * (w.y - v.y) });
+    }
+    function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
+
+    function drawLines(clientX, clientY) {
+      const svg = document.getElementById('svg');
+      while(svg.firstChild)
+        svg.removeChild(svg.firstChild);
+      const el = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+      const cursor = (clientX<0 ? [] : [{x: clientX, y: clientY}]);
+      el.setAttribute('points', pts.concat(cursor).map(p=>(p.x-area.left)+','+(p.y-area.top)).join(' '));
+      el.setAttribute('fill','none');
+      el.setAttribute('stroke', '#03a5fc');
+      el.setAttribute('stroke-width',6);
+      el.setAttribute('stroke-linecap','round');
+      el.setAttribute('stroke-linejoin','round');
+      svg.appendChild(el);
+    }
+
+    function coverLast(clientX, clientY) {
+      if(pts.length<1)
+        return [];
+      
+      let thisCovers = [];
+      lastPt = pts[pts.length-1];
+      for(let i = 0; i<3; ++i) {
+        for(let j = 0; j<3; ++j) {
+          const rect = dots[3*i+j].getBoundingClientRect();
+          const dot = {
+            x: rect.left + rect.width/2,
+            y: rect.top + rect.height/2
+          };
+
+          if(distToSegment(dot,lastPt,{x: clientX, y: clientY})<50) {
+            thisCovers.push({r: i, c: j});
+          }
+        }
+      }
+      return thisCovers;
+    }
+
+    function redraw(clientX, clientY){
+      const thisCovers = coverLast(clientX,clientY);
+
+      const green = Array(3).fill().map(()=>Array(3).fill(false));
+      for(const st of covers.concat([thisCovers])) {
+        for(const point of st) {
+          green[point.r][point.c] = true;
+        }
+      }
+      for(let i = 0; i<3; ++i) {
+        for(let j = 0; j<3; ++j) {
+          dots[3*i+j].style.backgroundColor = (green[i][j]?'#03a5fc':'black');
+        }
+      }
+
+      drawLines(clientX,clientY);
+    }
+
+    function onMove(ev){
+      if (pts.length>=5)
+        return;
+
+      const clientX = ev.clientX !== undefined ? ev.clientX : (ev.touches && ev.touches[0].clientX);
+      const clientY = ev.clientY !== undefined ? ev.clientY : (ev.touches && ev.touches[0].clientY);
+
+      redraw(clientX,clientY);
+    }
+
+    function placePoint(clientX, clientY){
+      if(pts.length>=5) {
+        return;
+      }
+      
+      covers.push(coverLast(clientX,clientY));
+      pts.push({x: clientX, y: clientY});
+      redraw(clientX,clientY);
+    }
+
+    playArea.addEventListener('click', e=>{placePoint(e.clientX, e.clientY)});
+    playArea.addEventListener('touchstart', e=>{
+      e.preventDefault(); const t = e.touches[0];
+      placePoint(t.clientX, t.clientY);
+    });
+    playArea.addEventListener('mousemove', onMove);
+    playArea.addEventListener('touchmove', onMove);
+
+    // controls
+    document.getElementById('clear').addEventListener('click', ()=>{
+      pts = [];
+      covers = [];
+      while(svg.firstChild)
+        svg.removeChild(svg.firstChild);
+      redraw(-1,-1);
+    });
+    document.getElementById('undo').addEventListener('click', ()=>{
+      pts.pop();
+      covers.pop();
+      svg.removeChild(svg.lastChild);
+      redraw(-1,-1);
+    });
+
+    document.getElementById('check').addEventListener('click', ()=>{
+      if(pts.length<5) {
+        status.textContent = `You still have ${max(4,5-pts.length)} lines left to place.`;
+      }
+
+      const green = Array(3).fill().map(()=>Array(3).fill(false));
+      for(const st of covers) {
+        for(const point of st) {
+          green[point.r][point.c] = true;
+        }
+      }
+      for(let i = 0; i<3; ++i) {
+        for(let j = 0; j<3; ++j) {
+          if(!green[i][j]) {
+            status.textContent = "There are points that have not been passed through.";
+            return;
+          }
+        }
+      }
+      status.textContent = "Well done!";
+      modal.classList.add('open');
+    });
+
+    document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('open'); });
+
+    // accessibility: Enter to check
+    document.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('check').click(); });
+  </script>
+</body>
+</html>
