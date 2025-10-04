@@ -118,21 +118,32 @@
 
     <div class="footbar">
       <div style="background:#ededed;padding:12px;border-radius:8px">
+        <button id="sol_reveal">Click to reveal solution</button>
+        <div id="solution" style="visibility: hidden; height: 0;">
+          <h3>Solution</h3>
+          <p>After struggling with this problem for a while, it may seem like it's impossible. If you thought that, you were right, because there is <b>no arrangement</b> of dominoes that covers this chessboard. However, instead of giving up, we should try to <b>prove</b> that no arrangement works.</p>
+          <p>Obviously, there are far too many different arrangements to try them all, so we'll have to be smarter. A good place to start would be to try some arrangements and see what fails.</p>
+          <img src="mutilated-chessboard-sol-1.png" style="width: 30%; display: inline-block;">
+          <img src="mutilated-chessboard-sol-2.png" style="width: 30%; display: inline-block;">
+          <img src="mutilated-chessboard-sol-3.png" style="width: 30%; display: inline-block;">
+          <p>Something you may notice is that after 30 dominoes are placed, there are always two blue squares left. So, let's analyze the colours on the chessboard a bit closer.</p>
+          <img src="mutilated-chessboard-sol-4.png" style="width: 50%; display: block; margin: auto;">
+          <p>Notice that no matter how we place a domino, it always covers one blue square and one black square. Therefore, any way we place 31 non-overlapping dominoes will cover 31 blue squares and 31 black squares.</p>
+          <p>However, both the squares that were removed from the chessboard were black, meaning that it has 32 blue squares and 30 black squares left, so it cannot be covered by 31 non-overlapping dominoes.</p>
+        </div>
+        <script>
+          document.getElementById('sol_reveal').onclick = function(){
+            const sol = document.getElementById('solution');
+            sol.style.visibility = (sol.style.visibility==='visible' ? 'hidden' : 'visible');
+            sol.style.height = (sol.style.visibility==='visible' ? 'auto' : '0');
+            this.textContent = (sol.style.visibility==='visible' ? 'Hide solution' : 'Click to reveal solution');
+          };
+        </script>
         <h3>More puzzles & resources</h3>
         <p>Click below for more problems like this and math resources (Google Classroom).</p>
         <a id="moreLink" class="link" href="#">Click here for more problems like this / math resources</a>
         <button id="copyLink" style="margin-top:8px">Copy link</button>
-        <small>Tip: draw smooth curves — paths can be any shape.</small>
       </div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="box">
-      <h2>Bravo!</h2>
-      <p><b>That wasn't too easy.</b> In fact, this problem uses a branch of math called <b>Topology</b>. Want to learn more? Join math club/circle!</p>
-      <p><a id="modalLink" href="#" target="_blank">Open the math club / resources</a></p>
-      <p style="margin-top:12px"><button id="closeModal">Close</button></p>
     </div>
   </div>
 
@@ -176,12 +187,12 @@
             active.domino.style.left = left - playRect.left + 'px';
             active.domino.style.top = top - playRect.top + 'px';
             active.posr = -1; active.posc = -1;
-            active.domino.style.borderColor = 'black';
+            active.domino.style.borderColor = '#111';
           } else {
             if(covered[row][col] || covered[row+drow][col+dcol]) {
               active.domino.style.borderColor = 'red';
             } else {
-              active.domino.style.borderColor = 'black';
+              active.domino.style.borderColor = '#111';
             }
             active.domino.style.left = col*b.width/8 + b.left - playRect.left-6 + 'px';
             active.domino.style.top = row*b.height/8 + b.top - playRect.top-6 + 'px';
@@ -191,7 +202,7 @@
           active.domino.style.left = left - playRect.left + 'px';
           active.domino.style.top = top - playRect.top + 'px';
           active.posr = -1; active.posc = -1;
-          active.domino.style.borderColor = 'black';
+          active.domino.style.borderColor = '#111';
         }
       }
 

@@ -89,10 +89,15 @@
     <div class="footbar">
       <div style="background:#ededed;padding:12px;border-radius:8px">
         <button id="sol_reveal">Click to reveal solution</button>
-      <div id="solution" style="visibility: hidden; height: 0;">
-        <h3>Solution</h3>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi corrupti, unde soluta perferendis modi eveniet necessitatibus nobis accusantium quia at excepturi quae incidunt officia reiciendis alias culpa inventore, autem ea.
-      </div>
+        <div id="solution" style="visibility: hidden; height: 0;">
+          <h3>Solution</h3>
+          <p>If you are struggling to solve a problem, a common problem-solving trick is to start with an easier problem. In this case, let's imagine that each letter was directly above its counterpart.</p>
+          <img src="connect-letters-sol-1.png" style="width: 100%">
+          <p>Now, we can move <b>A</b> back to its original position, 'pushing aside' the lines that it encounters.</p>
+          <img src="connect-letters-sol-2.png" style="width: 100%">
+          <p>Finally, we move <b>C</b> back to its original position in the same way, and now we have our solution!</p>
+          <img src="connect-letters-sol-3.png" style="width: 100%">
+        </div>
       <script>
         document.getElementById('sol_reveal').onclick = function(){
           const sol = document.getElementById('solution');
@@ -113,7 +118,7 @@
   <div class="modal" id="modal">
     <div class="box">
       <h2>Bravo!</h2>
-      <p><b>That wasn't too easy.</b> In fact, this problem uses a branch of math called <b>Topology</b>. Want to learn more? Join math club/circle!</p>
+      <p>Since you solved this, we think you'll be good at the type of problem-solving done in math club. In fact, this problem uses a branch of math called <b>Topology</b>. Want to learn more? Join math club/circle!</p>
       <p><a id="modalLink" href="#" target="_blank">Open the math club / resources</a></p>
       <p style="margin-top:12px"><button id="closeModal">Close</button></p>
     </div>
