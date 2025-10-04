@@ -148,7 +148,7 @@
     let covered = Array(8).fill().map(()=>Array(8).fill(false));
     let added = [];
 
-    function startDrawFromElement(domino, clientX, clientY){
+    function startDominoDrag(domino, clientX, clientY, nw){
       const orientation = domino.dataset.orient;
       const d = domino.getBoundingClientRect();
       const x = clientX-d.left; const y = clientY-d.top;
@@ -225,10 +225,10 @@
     }
 
     dominoes.forEach(dm=>{
-      dm.addEventListener('mousedown', e=>{startDrawFromElement(dm, e.clientX, e.clientY)}); //idk why the way from the other page doesn't work here
+      dm.addEventListener('mousedown', e=>{startDominoDrag(dm, e.clientX, e.clientY)}); //idk why the way from the other page doesn't work here
       dm.addEventListener('touchstart', e=>{
         e.preventDefault(); const t = e.touches[0];
-        startDrawFromElement(dm, t.clientX, t.clientY);
+        startDominoDrag(dm, t.clientX, t.clientY);
       });
     });
 
