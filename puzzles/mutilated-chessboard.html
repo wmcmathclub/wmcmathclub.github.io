@@ -162,11 +162,31 @@
     function startDominoDrag(domino, clientX, clientY, nw){
       const orientation = domino.dataset.orient;
       const d = domino.getBoundingClientRect();
+      const b = board.getBoundingClientRect();
       const x = clientX-d.left; const y = clientY-d.top;
-      const newDomino = domino.cloneNode(true);
-      active = {domino: newDomino, orientation: orientation, rx: x, ry: y, posr: -1, posc: -1};
+      const oldCol = (nw?-1:Math.round(8*(d.left-b.left)/b.width));
+      const oldRow = (nw?-1:Math.round(8*(d.top-b.top)/b.height));
+      let newDomino;
+      if(nw)
+        newDomino = domino.cloneNode(true);
+      else
+        newDomino = domino;
+      active = {
+        domino: newDomino,
+        orientation: orientation,
+        rx: x, ry: y,
+        posr: -1, posc: -1,
+        oldr: oldRow, oldc: oldCol
+      };
+      
+      if(nw) {
+        document.getElementById("playArea").appendChild(newDomino);
+      } else {
+        covered[oldRow][oldCol] = false;
+        covered[oldRow + (orientation=='vertical')][oldCol+(orientation=='horizontal')] = false;
+      }
 
-      document.getElementById("playArea").appendChild(newDomino);
+      newDomino.style.zIndex = 3;
 
       function onMove(ev){
         const clientX = ev.clientX !== undefined ? ev.clientX : (ev.touches && ev.touches[0].clientX);
@@ -214,19 +234,32 @@
         const clientX = ev.clientX !== undefined ? ev.clientX : (ev.changedTouches && ev.changedTouches[0].clientX);
         const clientY = ev.clientY !== undefined ? ev.clientY : (ev.changedTouches && ev.changedTouches[0].clientY);
 
+        active.domino.style.zIndex = 2;
+
         const drow = (active.orientation=='vertical');
         const dcol = (active.orientation=='horizontal');
+        
+        if(active.oldr<0) {
+          const newDomino = active.domino;
 
-        if(active.posr<0) {
+          active.domino.addEventListener('mousedown', e=>{startDominoDrag(newDomino, e.clientX, e.clientY, false)});
+          active.domino.addEventListener('touchstart', e=>{
+            e.preventDefault(); const t = e.touches[0];
+            startDominoDrag(newDomino, t.clientX, t.clientY, false);
+          });
+        }
+
+        if(active.posr<0 || covered[active.posr][active.posc] || covered[active.posr+drow][active.posc+dcol]) {
           document.getElementById('playArea').removeChild(active.domino);
-        } else if(covered[active.posr][active.posc] || covered[active.posr+drow][active.posc+dcol]) {
-          document.getElementById('playArea').removeChild(active.domino);
+          if(active.oldr>=0) { // for undos
+            added.push(active);
+          }
         } else {
           covered[active.posr][active.posc] = true;
           covered[active.posr+drow][active.posc+dcol] = true;
           added.push(active);
         }
-        active = null;
+        //active = null;
       }
 
       document.addEventListener('mousemove', onMove);
@@ -236,34 +269,53 @@
     }
 
     dominoes.forEach(dm=>{
-      dm.addEventListener('mousedown', e=>{startDominoDrag(dm, e.clientX, e.clientY)}); //idk why the way from the other page doesn't work here
+      dm.addEventListener('mousedown', e=>{startDominoDrag(dm, e.clientX, e.clientY, true)}); //idk why the way from the other page doesn't work here
       dm.addEventListener('touchstart', e=>{
         e.preventDefault(); const t = e.touches[0];
-        startDominoDrag(dm, t.clientX, t.clientY);
+        startDominoDrag(dm, t.clientX, t.clientY, true);
       });
     });
 
     // controls
     document.getElementById('clear').addEventListener('click', ()=>{
       for(const a of added) {
-        playArea.removeChild(a.domino);
+        if(playArea.contains(a.domino)) {
+          playArea.removeChild(a.domino);
+        }
       }
       added = [];
       covered = Array(8).fill().map(()=>Array(8).fill(false));
     });
     document.getElementById('undo').addEventListener('click', ()=>{
+      if(added.length<1) {
+        return;
+      }
       const last = added[added.length-1];
-      playArea.removeChild(last.domino);
-      covered[last.posr][last.posc] = false;
-      covered[last.posr+(last.orientation=='vertical')][last.posc+(last.orientation=='horizontal')] = false;
+
+      if(last.posr>=0) {
+        covered[last.posr][last.posc] = false;
+        covered[last.posr+(last.orientation=='vertical')][last.posc+(last.orientation=='horizontal')] = false;
+      }
+      
+      if(last.oldr<0) {
+        playArea.removeChild(last.domino);
+      } else {
+        if(!playArea.contains(last.domino)) {
+          playArea.appendChild(last.domino);
+        }
+        const b = board.getBoundingClientRect();
+        const playRect = playArea.getBoundingClientRect();
+        last.domino.style.left = last.oldc*b.width/8 + b.left - playRect.left-6 + 'px';
+        last.domino.style.top = last.oldr*b.height/8 + b.top - playRect.top-6 + 'px';
+        covered[last.oldr][last.oldc] = true;
+        covered[last.oldr+(last.orientation=='vertical')][last.oldc+(last.orientation=='horizontal')] = true;
+      }
       added.pop();
     });
 
     document.getElementById('check').addEventListener('click', ()=>{
       status.textContent = `You are missing ${31-added.length} domino${added.length==30?'':'es'}.`;
     });
-
-    document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('open'); });
 
     // accessibility: Enter to check
     document.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('check').click(); });
