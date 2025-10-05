@@ -139,6 +139,7 @@
 
     // store one polyline per letter (array of points) or null
     const paths = {A:null, B:null, C:null};
+    let done = [];
 
     // helpers
     function getCenter(el){
@@ -219,6 +220,7 @@
           active.pts.push(getCenter(targetBox));
           paths[active.letter] = active.pts;
           status.textContent = `Path set for ${active.letter}.`;
+          done.push(active.letter);
         }
         else {
           status.textContent = 'No valid matching target. Path discarded.';
@@ -264,29 +266,21 @@
     // controls
     document.getElementById('clear').addEventListener('click', ()=>{
       paths.A = paths.B = paths.C = null;
+      done = [];
       redrawAll();
       status.textContent='Cleared.'; 
     });
     document.getElementById('undo').addEventListener('click', ()=>{
-      if(paths.C){
-        paths.C = null;
-        status.textContent='Removed C path.';
-        redrawAll();
+      if(done.length<1) {
+        status.textContent='Nothing to undo.';
         return;
       }
-      if(paths.B){
-        paths.B = null;
-        status.textContent='Removed B path.';
-        redrawAll()
-        return;
-      }
-      if(paths.A){
-        paths.A = null;
-        status.textContent='Removed A path.';
-        redrawAll();
-        return;
-      }
-      status.textContent='Nothing to undo.';
+
+      paths[done[done.length-1]] = null;
+      status.textContent=`Removed ${done[done.length-1]} path.`;
+      done.pop();
+      redrawAll();
+      return;
     });
 
     document.getElementById('check').addEventListener('click', ()=>{
