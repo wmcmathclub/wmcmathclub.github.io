@@ -307,6 +307,7 @@
         const playRect = playArea.getBoundingClientRect();
         last.domino.style.left = last.oldc*b.width/8 + b.left - playRect.left-6 + 'px';
         last.domino.style.top = last.oldr*b.height/8 + b.top - playRect.top-6 + 'px';
+        last.domino.style.borderColor = '#111';
         covered[last.oldr][last.oldc] = true;
         covered[last.oldr+(last.orientation=='vertical')][last.oldc+(last.orientation=='horizontal')] = true;
       }
