@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .container {
+            margin-top: 5rem;
+            border-left: 5px solid rgba(60, 0, 78, 0.404);
+        }
+    </style>
+    <script>
+        function toggleAccordion(id) {
+            const elem = document.getElementById(id);
+            const controlling_elem = document.querySelector(`[aria-controls=${id}]`);
+            controlling_elem.ariaExpanded = controlling_elem.ariaExpanded === "true" ? "false" : "true";
+            if(controlling_elem.ariaExpanded === "true") {
+                elem.classList.add("expanded");
+            } else {
+                elem.classList.remove("expanded");
+            }
+        }
+    </script>
+    <title>Saskatoon Team Contest</title>
+</head>
+<body>
+    <nav id="navbar">
+        <div id="navbar-toggleable">
+            <div class="navbar-dropdown">test1</div>
+            <div class="navbar-dropdown">test2</div>
+        </div>
+    </nav>
+
+    <div class="full-width">
+        <h1 class="title">The First Annual Saskatoon Math Team Contest!</h1>
+    </div>
+    <div class="container">
+        <h2 class="cool-text-highlight" style="background-color: rgb(47, 81, 90);">What is it?</h2>
+        <p>This is a team contest for students all across Saskatoon. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem inventore magni numquam tempora? Deserunt tenetur, minus architecto, iure, aspernatur veniam sapiente accusantium a debitis laudantium ea quisquam harum assumenda ad.</p>
+        <h2 class="cool-text-highlight" style="background-color: rgb(177, 79, 70); text-align: center; margin: 2rem 0 1rem;">Contest Details</h2>
+        <div class="accordion">
+            <section>
+                <h3 aria-expanded="false" aria-controls="date-info" onclick="toggleAccordion('date-info')">When will this contest take place?</h3>
+                <p class="expandable" id="date-info">The contest will take place sometime in december</p>
+            </section>
+            
+            <section>
+                <h3 aria-expanded="false" aria-controls="participation-info" onclick="toggleAccordion('participation-info')">Who can participate?</h3>
+                <p class="expandable" id="participation-info">The contest will take place sometime in december</p>
+            </section>
+            <section>
+                <h3 aria-expanded="false" aria-controls="signup-info" onclick="toggleAccordion('signup-info')">How do I sign up?</h3>
+                <p class="expandable" id="signup-info">The contest will take place sometime in december</p>
+            </section>
+        </div>
+        
+        <p></p>
+    </div>
+    
+    
+
+</body>
+</html>

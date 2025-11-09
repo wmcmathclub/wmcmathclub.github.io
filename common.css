@@ -1,0 +1,191 @@
+html, body{
+  height:100%;
+  margin:0;
+  padding:0;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: rgb(3, 6, 10);
+  --default-text-colour: #FFFFFF;
+  color: var(--default-text-colour)
+}
+
+#navbar {
+  height: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #12649b;
+  height: 4rem;
+  color: var(--default-text-colour);
+}
+
+#navbar-toggleable {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.navbar-dropdown {
+  align-content: center;
+  transition: 0.1s ease-in;
+  height: 100%;
+  padding: 0 1rem;
+  background-color: rgb(121, 121, 121);
+}
+
+.navbar-dropdown:hover {
+  background-color: rgb(66, 66, 66);
+  transition: 0.20s ease-out;
+  cursor: pointer;
+}
+
+.content-header {
+  font-size: 4rem;
+  margin: 0.3rem 0;
+}
+
+button, a.button-link {
+  text-decoration: none;
+  color: black;
+  display: block;
+  background-color: #41d48a;
+  border: 2px solid #41d48a;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 5px;
+}
+
+button:hover, a.button-link:hover {
+  background-color: #226d47;
+  cursor:pointer;
+}
+
+.column-of-info {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.column-of-info > * {
+  width: fit-content;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%; 
+}
+.container > * {
+  margin-top: 1rem;
+}
+
+h2 {
+  font-size: 3rem;
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+button.accordion {
+  display: flex;
+  flex-direction: row;
+  background: none;
+  border: none;
+  color: var(--default-text-colour);
+  padding: 0;
+}
+
+.accordion > section {
+  border-bottom: 5px solid rgb(110, 1, 74);
+  padding: 1rem;
+}
+.accordion > section:nth-last-child(1) {
+  border-bottom: none;
+}
+
+.accordion > section > * {
+  margin: 0rem 0;
+}
+
+.accordion > section > h3 {
+  font-size: 2rem;
+  user-select: none;
+}
+
+.accordion > section > h3:hover {
+  background-color: #6b324555;
+  cursor: pointer;
+}
+
+.accordion > section > h3[aria-expanded="true"] {
+  background-color: #6b3245FF;
+}
+
+.cool-text-highlight, .accordion > section > h3 {
+  display: block;
+  width: fit-content;
+  padding: 0.5rem 2rem;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.expandable {
+  transition: 200ms ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.expanded {
+  max-height: fit-content;
+  margin: 0;
+}
+
+div.full-width {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(to right, #6b3245 0%, #0f3c5a 100%);
+}
+
+h1.title {
+  font-size: 5rem;
+  padding: 3rem 1.5rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* taken from bootstrap values
+   small */
+@media(width >= 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+/* medium */
+@media(width >= 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+/* large  */
+@media(width >= 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* x-large */
+@media(width >= 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* xx-large */
+@media(width >= 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
