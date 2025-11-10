@@ -5,10 +5,14 @@ html, body{
   font-family: Inter, Arial, Helvetica, sans-serif;
   background: rgb(20, 29, 42);
   --default-text-colour: #eff1f3;
+  --h1-text-size: calc(min(5rem,12vw));
+  --h2-text-size: calc(var(--h1-text-size) * 0.7);
+  --h3-text-size: calc(var(--h2-text-size) * 0.8);
+  --p-text-size: calc(var(--h2-text-size) / 2);
   color: var(--default-text-colour)
 }
 
- @font-face {
+@font-face {
   font-family: 'Sifonn Pro';
   font-style: normal;
   font-weight: normal;
@@ -16,7 +20,7 @@ html, body{
 }
 
 #navbar {
-  height: 100%;
+  /* TODO: navbar disappears after scrolling too far (why?) */
   position: sticky;
   top: 0;
   background-color: #12649b;
@@ -96,24 +100,19 @@ td, th {
   width: 100%; 
 }
 .container > * {
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
 }
 
 h2 {
-  font-size: 3rem;
+  font-size: var(--h2-text-size);
+}
+
+h3 {
+  font-size: var(--h3-text-size)
 }
 
 p {
-  font-size: 1.5rem;
-}
-
-button.accordion {
-  display: flex;
-  flex-direction: row;
-  background: none;
-  border: none;
-  color: var(--default-text-colour);
-  padding: 0;
+  font-size: var(--p-text-size);
 }
 
 .accordion > section {
@@ -125,11 +124,10 @@ button.accordion {
 }
 
 .accordion > section > * {
-  margin: 0rem 0;
+  margin: 0;
 }
 
 .accordion > section > h3 {
-  font-size: 2rem;
   user-select: none;
 }
 
@@ -168,8 +166,9 @@ div.full-width {
 }
 
 h1.title {
-  font-size: calc(min(5rem,12vw));
-  padding: 3rem 1.5rem;
+  font-size: var(--h1-text-size);
+  padding: 1em 0;
+  width: 0 calc(max(80%, 12em));
   margin: 0 auto;
   text-align: center;
 }
