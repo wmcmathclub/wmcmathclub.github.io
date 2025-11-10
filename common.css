@@ -60,6 +60,19 @@ button:hover, a.button-link:hover {
   cursor:pointer;
 }
 
+table {
+  table-layout: fixed;
+  width: 30%;
+  margin: 1rem auto;
+  border-collapse: collapse;
+  font-size: 1.3rem;
+}
+
+td, th {
+  padding: 0.6em;
+  text-align: center;
+}
+
 .column-of-info {
   display: flex;
   flex-direction: column;
