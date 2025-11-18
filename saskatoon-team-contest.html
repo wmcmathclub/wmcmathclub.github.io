@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="icon" type="image/jpg" href="media/team-contest-logo.jpg">
+    
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .container {
+            margin-top: 2rem;
+            border-left: 5px solid rgba(60, 0, 78, 0.404);
+        }
+    </style>
+    <script>
+        function toggleAccordion(id) {
+            const elem = document.getElementById(id);
+            const controlling_elem = document.querySelector(`[aria-controls=${id}]`);
+            controlling_elem.ariaExpanded = controlling_elem.ariaExpanded === "true" ? "false" : "true";
+            if(controlling_elem.ariaExpanded === "true") {
+                elem.classList.add("expanded");
+            } else {
+                elem.classList.remove("expanded");
+            }
+        }
+    </script>
+    <title>Saskatoon Team Contest</title>
+</head>
+<body>
+    <nav id="navbar">
+        <div id="navbar-toggleable">
+            <a href="index.html" class="navbar-dropdown">Home page</a>
+            <a href="puzzles/connect-letters.html" class="navbar-dropdown">Puzzles</a>
+        </div>
+    </nav>
+
+    <div class="full-width">
+        <h1 class="title">The First Annual YXE Team Math Contest!</h1>
+    </div>
+    <div class="container">
+        <h2 class="cool-text-highlight" style="background-color: rgb(47, 81, 90);">What is it?</h2>
+        <p>Walter Murray's Math Club is proud to be hosting Saskatoon's first ever YXE Team Math Contest! This is a competition available to all elementary and high school students who currently attend a Saskatoon school. You and your team will be put to a test of wits against the other teams in an attempt to prove yourselves as the best in Saskatoon. Cash prizes will be available for the winners.</p>
+        <h2 class="cool-text-highlight" style="background-color: rgb(177, 79, 70); text-align: center; margin: 2rem 0 1rem;">Contest Details</h2>
+        <div class="accordion">
+            <section>
+                <h3 aria-expanded="false" aria-controls="date-info" onclick="toggleAccordion('date-info')">When/where will this contest take place?</h3>
+                <p class="expandable" id="date-info">The contest will take place on December 13th, 2025. Please note that this is on a Saturday. A definite event location has not yet been determined, but will most likely be at the University of Saskatchewan. We will update this page with more details as soon as possible.</p>
+            </section>
+            
+            <section>
+                <h3 aria-expanded="false" aria-controls="participation-info" onclick="toggleAccordion('participation-info')">Who can participate?</h3>
+                <p class="expandable" id="participation-info">Any elementary school or high school student in Saskatoon is eligible to participate in this contest. It does not matter if you are in the public system or catholic system. Please note, however, that some of the problems will contain high school level mathematics and mathematical concepts, and will therefore not be suitable to most elementary school students.</p>
+            </section>
+            <section>
+                <h3 aria-expanded="false" aria-controls="structure-info" onclick="toggleAccordion('structure-info')">What will the day of the competition look like?</h3>
+                <div class="expandable" id="structure-info">
+                    <p>The contest will take place the entire day. The schedule has not been fully decided yet but here are a few items you can expect:</p>
+                    <ul>
+                        <li><p>A teamwork portion where you will work together with your teammates on a list of 20 problems.</p></li>
+                        <li><p>An individual section where each team member will try to do a selection of 10 problems separately.</p></li>
+                        <li><p>A high paced relay section where each member of your team will answer a question based on the number they recieve from the person behind them.</p></li>
+                        <li><p>A fun and engaging presentation from a university professor.</p></li>
+                        <li><p>Free lunch and snacks.</p></li>
+                        <li><p>A for fun logic puzzle and games section.</p></li>
+                        <li><p>A small awards ceremony, where we will announce the best team in Saskatoon!</p></li>
+                    </ul>
+                    <!-- <table>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                        </tr>
+                        <tr>
+                            <td>10:00-11:00</th>
+                            <td>First event</td>
+                        </tr>
+                        <tr>
+                            <td>11:00-12:00</td>
+                            <td>Lunch</td>
+                        </tr>
+                    </table> -->
+                </div>
+            </section>
+            <section>
+                <h3 aria-expanded="false" aria-controls="signup-info" onclick="toggleAccordion('signup-info')">How do I sign up?</h3>
+                <p class="expandable" id="signup-info">Instructions for how to sign up are COMING SOON</p>
+            </section>
+            <section>
+                <h3 aria-expanded="false" aria-controls="sponsor-info" onclick="toggleAccordion('sponsor-info')">Why should I sponsor this event?</h3>
+                <p class="expandable" id="sponsor-info">If you are a company or organization, sponsoring this event would be a great way to further your reach and recognition with the bright and up-and-coming youth of Saskatoon. By sponsoring us, we will put you prominently in the list of our sponsors. Furthermore, our advertising and promotional content will include your logo. Finally, you will receive a shoutout at the actual event. For more information about sponsoring or other sponsoring requests, please feel free to contact us at <a href="mailto:waltermurraymathclub@gmail.com">waltermurraymathclub@gmail.com</a></p>
+            </section>
+        </div>
+        <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:waltermurraymathclub@gmail.com">waltermurraymathclub@gmail.com</a></p>
+    </div>
+</body>
+</html>

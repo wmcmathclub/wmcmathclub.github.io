@@ -1,0 +1,235 @@
+html, body{
+  height:auto;
+  margin:0;
+  padding:0;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: rgb(20, 29, 42);
+  --default-text-colour: #eff1f3;
+  --h1-text-size: calc(min(5rem,12vw));
+  --h2-text-size: calc(var(--h1-text-size) * 0.7);
+  --h3-text-size: calc(var(--h2-text-size) * 0.8);
+  --p-text-size: calc(var(--h2-text-size) / 2);
+  color: var(--default-text-colour)
+}
+
+@font-face {
+  font-family: 'Sifonn Pro';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Sifonn Pro'), url('SIFONN_PRO.woff') format('woff');
+}
+
+#navbar {
+  /* TODO: navbar disappears after scrolling too far (why?) */
+  position: sticky;
+  display:block;
+  width:100%;
+  top: 0;
+  left: 0;
+  background-color: #12649b;
+  height: 4rem;
+  color: var(--default-text-colour);
+}
+
+#navbar-toggleable {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.navbar-dropdown {
+  text-decoration: none;
+  color: var(--default-text-colour);
+  align-content: center;
+  transition: 0.1s ease-in;
+  height: 100%;
+  padding: 0 1rem;
+  background-color: rgb(121, 121, 121);
+}
+
+.navbar-dropdown:hover {
+  background-color: rgb(66, 66, 66);
+  transition: 0.20s ease-out;
+  cursor: pointer;
+}
+
+.content-header {
+  font-size: calc(min(10vw,4rem));
+  margin: 0.3rem 0;
+}
+
+a {
+  color: rgb(14, 187, 144)
+}
+
+button, a.button-link {
+  text-decoration: none;
+  color: black;
+  display: block;
+  background-color: #41d48a;
+  border: 2px solid #41d48a;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 5px;
+}
+
+button:hover, a.button-link:hover {
+  background-color: #226d47;
+  cursor:pointer;
+}
+
+table {
+  table-layout: fixed;
+  width: max(30%,15rem);
+  margin: 1rem auto;
+  border-collapse: collapse;
+  font-size: 1.3rem;
+}
+
+td, th {
+  padding: 0.6em;
+  text-align: center;
+}
+
+.column-of-info {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.column-of-info > * {
+  width: fit-content;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%; 
+}
+.container > * {
+  margin-top: 1rem;
+}
+
+.container > img {
+  margin-top: inherit;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: 40%;
+}
+
+h2 {
+  font-size: var(--h2-text-size);
+}
+
+h3 {
+  font-size: var(--h3-text-size)
+}
+
+p {
+  font-size: var(--p-text-size);
+}
+
+.accordion > section {
+  border-bottom: 5px solid rgb(110, 1, 74);
+  padding: 1rem;
+}
+.accordion > section:nth-last-child(1) {
+  border-bottom: none;
+}
+
+.accordion > section > * {
+  margin: 0;
+}
+
+.accordion > section > h3 {
+  user-select: none;
+}
+
+.accordion > section > h3:hover {
+  background-color: #6b324555;
+  cursor: pointer;
+}
+
+.accordion > section > h3[aria-expanded="true"] {
+  background-color: #6b3245FF;
+}
+
+.cool-text-highlight, .accordion > section > h3 {
+  display: block;
+  width: fit-content;
+  padding: 0.5rem 2rem;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.expandable {
+  transition: 200ms ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.expanded {
+  max-height: fit-content;
+  margin: 0;
+}
+
+div.full-width {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(to right, #6b3245 0%, #0f3c5a 100%);
+}
+
+h1.title {
+  font-size: var(--h1-text-size);
+  padding: 1em 0;
+  width: 0 calc(max(80%, 12em));
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1.home-title {
+  font-size: calc(min(8rem,20vw));
+  padding: 3rem 1.5rem;
+  margin: 3rem auto;
+  text-align: center;
+  font-family:'Sifonn Pro';
+}
+
+/* taken from bootstrap values
+   small */
+@media(width >= 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+/* medium */
+@media(width >= 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+/* large  */
+@media(width >= 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* x-large */
+@media(width >= 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* xx-large */
+@media(width >= 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
