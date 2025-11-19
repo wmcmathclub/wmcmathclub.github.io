@@ -20,10 +20,10 @@ html, body{
 }
 
 #navbar {
-  /* TODO: navbar disappears after scrolling too far (why?) */
   position: sticky;
   display:block;
   width:100%;
+  z-index: 10000000;
   top: 0;
   left: 0;
   background-color: #12649b;
@@ -132,6 +132,17 @@ p {
   font-size: var(--p-text-size);
 }
 
+p.quote {
+  display: block;
+  background-color: #6b3245;
+  border: 10px solid #3f1d28;
+  border-radius: 20px;
+  padding: 0.5em 1em;
+  width: 90%;
+  margin: 1rem auto;
+  text-align: center;
+}
+
 .accordion > section {
   border-bottom: 5px solid rgb(110, 1, 74);
   padding: 1rem;
@@ -196,6 +207,22 @@ h1.home-title {
   margin: 3rem auto;
   text-align: center;
   font-family:'Sifonn Pro';
+}
+
+a.link-image {
+  width: fit-content;
+  padding: 0;
+}
+
+a.link-image > img {
+  transform: scale(1);
+  transition: 0.2s ease-in-out;
+  margin: 0;
+}
+
+a.link-image > img:hover {
+  transform: scale(1.1);
+  transition: 0.2s ease-in-out;
 }
 
 /* taken from bootstrap values

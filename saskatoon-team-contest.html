@@ -12,6 +12,22 @@
             margin-top: 2rem;
             border-left: 5px solid rgba(60, 0, 78, 0.404);
         }
+        #partnerships-block {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;            
+        }
+        #partnerships-block > a {
+            flex-grow: 100%;
+            margin: min(2rem, 2%) 1em;
+            height: 15vh;
+        }
+        #partnerships-block > a > img {
+            height: 100%;
+            max-width: min(none, 90vw);
+        }
     </style>
     <script>
         function toggleAccordion(id) {
@@ -39,8 +55,14 @@
         <h1 class="title">The First Annual YXE Team Math Contest!</h1>
     </div>
     <div class="container">
-         <h2 class="cool-text-highlight" style="background-color: rgb(47, 81, 90);">Partners</h2>
-         <img src="media/Jane_Street_Logo.svg">
+        <section id="partnerships-section">
+            <h2 class="cool-text-highlight" style="background-color: rgb(47, 81, 90);">Partners</h2>
+            <div id="partnerships-block">
+                <a class="link-image" href="https://www.janestreet.com/"><img src="media/Jane_Street_Logo.svg" alt="Jane Street"></a> 
+            </div>
+            
+        </section>
+        
         <h2 class="cool-text-highlight" style="background-color: rgb(47, 81, 90);">What is it?</h2>
         <p>Walter Murray's Math Club is proud to be hosting Saskatoon's first ever YXE Team Math Contest! This is a competition available to all elementary and high school students who currently attend a Saskatoon school. You and your team of 4 will be put to a test of wits against the other teams in an attempt to prove yourselves as the best in Saskatoon. Prizes will be available for the winners. If you do not yet have a team, you can sign up as an individual and you will be assigned a team on the day of the contest.</p>
         <p><a href="https://forms.gle/XzHEX6nPDRVNZ5Uh6">Click here to sign up!</a></p>
@@ -67,8 +89,6 @@
                         <li><p>A for fun logic puzzle and games section.</p></li>
                         <li><p>A small awards ceremony, where we will announce the best team in Saskatoon!</p></li>
                     </ul>
-                    <p>If you've never written a math contest before, the problems will be different than the type of math you are used to seeing in school. These problems will need outside-the-box thinking, using the math you have learned in school to tackle problems you've never seen before. Here is an example of such a problem:</p>
-                    <p>There are 100 lockers in a row, all closed. You make 100 passes: on the first pass, you toggle every locker. On the second pass, you toggle every 2nd locker. On the third pass, every 3rd locker… and so on, until the 100th pass, when you toggle only the 100th locker. How many lockers are open at the end?</p>
                     <!-- <table>
                         <tr>
                             <th>Time</th>
@@ -86,8 +106,29 @@
                 </div>
             </section>
             <section>
-                <h3 aria-expanded="false" aria-controls="signup-info" onclick="toggleAccordion('signup-info')">How do I sign up?</h3>
-                <p class="expandable" id="signup-info">Competitors can sign up for the event <a href="https://forms.gle/XzHEX6nPDRVNZ5Uh6">here</a>.</p>
+                <h3 aria-expanded="false" aria-controls="problem-info" onclick="toggleAccordion('problem-info')">What kinds of problems are on a math contest?</h3>
+                <div class="expandable" id="problem-info">
+                    <p>If you've never written a math contest before, the problems will be different than the type of math you are used to seeing in school. These problems will need outside-the-box thinking, using the math you have learned in school to tackle problems you've never seen before. Here is an example of such a problem:</p>
+                    <p class="quote">There are 100 lockers in a row, all closed. You make 100 passes: on the first pass, you toggle every locker. On the second pass, you toggle every 2nd locker. On the third pass, every 3rd locker… and so on, until the 100th pass, when you toggle only the 100th locker. How many lockers are open at the end?</p>
+                    <!-- <table>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                        </tr>
+                        <tr>
+                            <td>10:00-11:00</th>
+                            <td>First event</td>
+                        </tr>
+                        <tr>
+                            <td>11:00-12:00</td>
+                            <td>Lunch</td>
+                        </tr>
+                    </table> -->
+                </div>
+            </section>
+            <section>
+                <h3 aria-expanded="false" aria-controls="signup-info" onclick="toggleAccordion('signup-info')">How do I sign up and get a team?</h3>
+                <p class="expandable" id="signup-info">Competitors can sign up for the event <a href="https://forms.gle/XzHEX6nPDRVNZ5Uh6">here</a>.<br>As this is a team competition, you will need a team of 4 to participate. However, if you do not have a team, you can still sign up as a solo participant, and we will pair you with other solo participants. We will try to pair up people from the same school as much as possible.</p>
             </section>
             <section>
                 <h3 aria-expanded="false" aria-controls="sponsor-info" onclick="toggleAccordion('sponsor-info')">Why should I sponsor this event?</h3>
