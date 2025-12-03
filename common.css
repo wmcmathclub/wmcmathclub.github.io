@@ -82,7 +82,7 @@ button:hover, a.button-link:hover {
 
 table {
   table-layout: fixed;
-  width: max(30%,15rem);
+  width: min(80%,30rem);
   margin: 1rem auto;
   border-collapse: collapse;
   font-size: 1.3rem;
