@@ -1,5 +1,5 @@
 // robust clipboard-copy helper with fallbacks
-const CLASSROOM_URL = 'https://classroom.google.com/u/1/c/MzIwMTQ2MTIwOTIw';    
+const CLASSROOM_URL = 'https://wmcmathclub.github.io/saskatoon-team-contest.html';    
 
 function fallbackCopyTextToClipboard(text) {
   try {
